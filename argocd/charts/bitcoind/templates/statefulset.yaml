@@ -69,7 +69,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data/.bitcoin
-            - name: bitcoin-config
+            - name: config
               mountPath: /data/.bitcoin/bitcoin.conf
               subPath: bitcoin.conf
           resources:
@@ -99,7 +99,7 @@ spec:
       volumes:
         - name: data
           emptyDir: {}
-        - name: bitcoin-config
+        - name: config
           configMap:
             name: {{ include "bitcoin.fullname" . }}-config
             items:
