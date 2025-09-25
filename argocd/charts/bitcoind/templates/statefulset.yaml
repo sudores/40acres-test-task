@@ -1,0 +1,144 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "bitcoin.fullname" . }}
+  labels:
+    {{- include "bitcoin.labels" . | nindent 4 }}
+    {{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  serviceName: {{ include "bitcoin.fullname" . }}
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "bitcoin.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "bitcoin.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      priorityClassName: {{ .Values.priorityClassName | default "" }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "bitcoin.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.extraInitContainers }}
+      initContainers:
+      {{- toYaml .Values.extraInitContainers | nindent 8 }}
+      {{- end }}
+      containers:
+      {{- if .Values.sidecarContainers }}
+      {{- toYaml .Values.sidecarContainers | nindent 8 }}
+      {{- end }}
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "bitcoin-cli stop"]
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.command }}
+          command:
+            {{- toYaml .Values.command | nindent 12 }}
+          {{- end }}
+          ports:
+            - name: rpc
+              containerPort: {{ .Values.global.service.ports.rpc }}
+            - name: p2p
+              containerPort: {{ .Values.service.ports.p2p }}
+            - name: zmqpubrawtx
+              containerPort: {{ .Values.service.ports.zmqpubrawtx }}
+            - name: zmqpubrawblock
+              containerPort: {{ .Values.service.ports.zmqpubrawblock }}
+          volumeMounts:
+            - name: data
+              mountPath: /data/.bitcoin
+            - name: bitcoin-config
+              mountPath: /data/.bitcoin/bitcoin.conf
+              subPath: bitcoin.conf
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        - name: exporter
+          image: ghcr.io/esomore/bitcoin-prometheus-exporter:master
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: BITCOIN_RPC_HOST
+            value: 127.0.0.1
+          - name: BITCOIN_RPC_USER
+            value: rpcuser
+          - name: BITCOIN_RPC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
+                key: password
+          - name: METRICS_PORT
+            value: {{ .Values.service.ports.metrics | toString | quote }}
+          - name: BITCOIN_RPC_PORT
+            value: {{ .Values.global.service.ports.rpc | toString | quote }}
+          ports:
+          - name: metrics
+            containerPort: {{ .Values.service.ports.metrics }}
+
+      {{- if not .Values.persistence.enabled }}
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: bitcoin-config
+          configMap:
+            name: {{ include "bitcoin.fullname" . }}-config
+            items:
+              - key: bitcoin.conf
+                path: bitcoin.conf
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if .Values.persistence.enabled }}
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      annotations:
+        "helm.sh/resource-policy": keep
+    spec:
+      accessModes:
+        - {{ .Values.persistence.accessMode | quote }}
+      resources:
+        requests:
+          storage: {{ .Values.persistence.size | quote }}
+    {{- if .Values.persistence.storageClass }}
+    {{- if (eq "-" .Values.persistence.storageClass) }}
+      storageClassName: ""
+    {{- else }}
+      storageClassName: "{{ .Values.persistence.storageClass }}"
+    {{- end }}
+    {{- end }}
+  {{- else }}
+  # Note: When persistence is disabled, StatefulSet will use emptyDir for the data volume
+  # This is handled by the volume definition in the pod template
+  # No volumeClaimTemplates are needed in this case
+  {{- end }}

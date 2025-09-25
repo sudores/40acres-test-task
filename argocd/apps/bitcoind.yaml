@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://cosmicrocks.github.io/helm-charts/
-    chart: bitcoin
-    targetRevision: 2.0.2
+    repoURL: https://github.com/sudores/40acres-test-task.git
+    targetRevision: master
+    path: argocd/charts/bitcoind
     helm:
       values: |
         global:
@@ -16,18 +16,25 @@ spec:
           service:
             ports:
               rpc: 8332
-        bitcoin:
-          serverEnabled: 1
-          txindexEnabled: 1
-          printtoconsoleEnabled: 1
-          rpcUser: bitcoin
+        bitcoinConfig: |
+          server=1
+          listen=1
+          testnet=1
           prune=1000
+          txindex=0
+          rpcallowip=0.0.0.0/0
+          whitelist=0.0.0.0/0
+          listenonion=0
+          rpcuser=bitcoin
+          rpcpassword=bitcoin
           fallbackfee=0.00001
           blockfilterindex=1
           peerblockfilters=1
           rpcworkqueue=64
+          [test]
+          rpcport=8332
+          rpcbind=0.0.0.0
           dns=1
-
         replicaCount: 1
         image:
           repository: ghcr.io/cosmicrocks/knots

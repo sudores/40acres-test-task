@@ -1,0 +1,16 @@
+apiVersion: v2
+appVersion: knots20250305
+description: A Helm chart for Bitcoin knots for the OCEAN protocol.
+home: https://github.com/cosmicrocks/helm-charts/tree/main/charts/bitcoin
+icon: https://raw.githubusercontent.com/cosmicrocks/helm-charts/refs/heads/main/charts/bitcoin/icon.png
+keywords:
+- bitcoin
+- knots
+maintainers:
+- email: itamar@cosmic.rocks
+  name: esomore
+name: bitcoin
+sources:
+- https://github.com/cosmicrocks/helm-charts/tree/main/charts/bitcoin
+type: application
+version: 2.0.2

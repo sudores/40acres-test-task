@@ -1,0 +1,98 @@
+global:
+  network: mainnet
+  service:
+    ports:
+      rpc: 8332
+
+secrets:
+  create: true
+
+command: []
+bitcoinConfig: |
+  rpcuser=rpcuser
+  rpcpassword=changeme
+  server=1
+  txindex=1
+  zmqpubrawblock=tcp://0.0.0.0:28332
+  zmqpubrawtx=tcp://0.0.0.0:28333
+
+replicaCount: 1
+
+terminationGracePeriodSeconds: 10
+
+priorityClassName: ""
+
+image:
+  repository: ghcr.io/cosmicrocks/knots
+  pullPolicy: Always
+  tag: "28.1.knots20250305"
+
+metrics:
+  podMonitor:
+    enabled: false
+    interval: 30s
+    scrapeTimeout: 20s
+
+extraInitContainers: []
+sidecarContainers: []
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "bitcoin"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+
+resources:
+  # limits:
+  #   memory: 16Gi
+  # requests:
+  #   cpu: 1000m
+  #   memory: 16Gi
+
+persistence:
+  enabled: true  # Enable persistence by default for StatefulSet
+  storageClass: ""
+  # existingClaim: ""
+  accessMode: ReadWriteOnce
+  size: 900Gi
+
+autoscaling:
+  enabled: false
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+labels: {}
+
+podLabels:
+  app: bitcoin
+
+service:
+  type: ClusterIP
+  ports:
+    zmqpubrawtx: 8431
+    zmqpubrawblock: 8432
+    zmqpubhashblock: 8433
+    p2p: 8333
+    metrics: 9223
