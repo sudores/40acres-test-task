@@ -25,7 +25,7 @@ priorityClassName: ""
 image:
   repository: public.ecr.aws/g3y5i1b4/bitcoind
   pullPolicy: Always
-  tag: ":v29.0"
+  tag: "v29.0"
 
 metrics:
   podMonitor:
