@@ -29,7 +29,7 @@ image:
 
 metrics:
   podMonitor:
-    enabled: false
+    enabled: true
     interval: 30s
     scrapeTimeout: 20s
 
