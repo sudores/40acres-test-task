@@ -4,5 +4,5 @@ metadata:
   name: {{ include "bitcoin.fullname" . }}-config
 data:
   bitcoin.conf: |
-    {{ .Values.bitcoinConfig | indent 4 }}
+{{ .Values.bitcoinConfig | indent 4 }}
 
