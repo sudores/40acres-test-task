@@ -34,8 +34,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
 
-      command: ["sleep", "3000"
-
       serviceAccountName: {{ include "bitcoin.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -51,8 +49,9 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          args:
-            - "-conf=/bitcoin.conf"
+          command:
+            - sleep
+            - 3000
           lifecycle:
             preStop:
               exec:
@@ -75,7 +74,7 @@ spec:
             - name: data
               mountPath: /data/.bitcoin
             - name: config
-              mountPath: /bitcoin.conf
+              mountPath: /data/.bitcoin/bitcoin.conf
               subPath: bitcoin.conf
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
