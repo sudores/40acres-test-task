@@ -95,16 +95,16 @@ spec:
           - name: metrics
             containerPort: {{ .Values.service.ports.metrics }}
 
-      {{- if not .Values.persistence.enabled }}
       volumes:
-        - name: data
-          emptyDir: {}
         - name: config
           configMap:
             name: {{ include "bitcoin.fullname" . }}-config
             items:
               - key: bitcoin.conf
                 path: bitcoin.conf
+      {{- if not .Values.persistence.enabled }}
+        - name: data
+          emptyDir: {}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
