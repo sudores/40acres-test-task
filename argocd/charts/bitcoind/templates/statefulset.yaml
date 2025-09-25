@@ -37,16 +37,6 @@ spec:
       serviceAccountName: {{ include "bitcoin.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      initContainers:
-        - name: fix-permissions
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-          image: busybox
-          command: ["sh", "-c", "mkdir -p /data/.bitcoin && chown -R 1000:1000 /data/.bitcoin"]
-          volumeMounts:
-            - name: data
-              mountPath: /data/.bitcoin
       {{- if .Values.extraInitContainers }}
       {{- toYaml .Values.extraInitContainers | nindent 8 }}
       {{- end }}
@@ -58,7 +48,6 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          command: ["sleep", "3000"]
           lifecycle:
             preStop:
               exec:
