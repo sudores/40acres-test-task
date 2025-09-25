@@ -47,7 +47,7 @@ spec:
           enabled: true
           accessMode: ReadWriteOnce
           size: 20Gi
-          storageClass: local-path
+          storageClass: standard
 
         resources:
           requests:
