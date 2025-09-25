@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://cosmicrocks.github.io/helm-charts/
     chart: bitcoin
-    targetRevision: 28.1.knots20250305
+    targetRevision: 2.0.2
     helm:
       values: |
         global:
