@@ -49,8 +49,8 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-
-          entrypoint: ['cat $HOME/.bitcoin/bitcoin.conf']
+          args:
+            - "-conf=/bitcoin.conf"
           lifecycle:
             preStop:
               exec:
@@ -73,7 +73,7 @@ spec:
             - name: data
               mountPath: /data/.bitcoin
             - name: config
-              mountPath: /data/.bitcoin/bitcoin.conf
+              mountPath: /bitcoin.conf
               subPath: bitcoin.conf
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
