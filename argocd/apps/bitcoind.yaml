@@ -22,7 +22,6 @@ spec:
           txindexEnabled: 0
           printtoconsoleEnabled: 1
           rpcUser: bitcoin
-          rpcBind: "0.0.0.0"
           rpcAllowIP: "0.0.0.0/0"
           dbCrashRatio: 0.0001
           listenonion: 0
