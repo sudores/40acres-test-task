@@ -22,6 +22,8 @@ spec:
           printtoconsoleEnabled: 1
           rpcUser: bitcoin
           rpcAllowIP: "0.0.0.0/0"
+          rpcbind: "0.0.0.0"
+          rpcport: 18332
           dbCrashRatio: 0.0001
           listenonion: 0
           fallbackfee: 0.00001
@@ -30,10 +32,6 @@ spec:
           peerblockfilters: 1
           rpcWorkQueue: 64
           testnet: 1          # explicitly enable testnet
-          test:
-            rpcport: 18332     # testnet default is 18332, not 8332
-            rpcbind: "0.0.0.0"
-            dns: 1
 
         replicaCount: 1
         image:
