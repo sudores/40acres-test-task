@@ -23,9 +23,9 @@ terminationGracePeriodSeconds: 10
 priorityClassName: ""
 
 image:
-  repository: ghcr.io/cosmicrocks/knots
+  repository: public.ecr.aws/g3y5i1b4/bitcoind
   pullPolicy: Always
-  tag: "28.1.knots20250305"
+  tag: ":v29.0"
 
 metrics:
   podMonitor:
