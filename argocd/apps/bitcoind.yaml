@@ -16,7 +16,6 @@ spec:
           service:
             ports:
               rpc: 8332
-
         bitcoin:
           serverEnabled: 1
           txindexEnabled: 0
@@ -30,13 +29,13 @@ spec:
           blockfilterindex: 1
           peerblockfilters: 1
           rpcWorkQueue: 64
+          testnet: 1          # explicitly enable testnet
           test:
-            rpcport: 8332
+            rpcport: 18332     # testnet default is 18332, not 8332
             rpcbind: "0.0.0.0"
             dns: 1
 
         replicaCount: 1
-
         image:
           repository: ghcr.io/cosmicrocks/knots
           tag: "28.1.knots20250305"
