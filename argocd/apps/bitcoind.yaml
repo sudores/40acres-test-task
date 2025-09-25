@@ -18,20 +18,15 @@ spec:
               rpc: 8332
         bitcoin:
           serverEnabled: 1
-          txindexEnabled: 0
+          txindexEnabled: 1
           printtoconsoleEnabled: 1
           rpcUser: bitcoin
-          rpcAllowIP: "0.0.0.0/0"
-          rpcbind: "0.0.0.0"
-          rpcport: 18332
-          dbCrashRatio: 0.0001
-          listenonion: 0
-          fallbackfee: 0.00001
-          blockReconstructionExtraTxn: 10000
-          blockfilterindex: 1
-          peerblockfilters: 1
-          rpcWorkQueue: 64
-          testnet: 1          # explicitly enable testnet
+          prune=1000
+          fallbackfee=0.00001
+          blockfilterindex=1
+          peerblockfilters=1
+          rpcworkqueue=64
+          dns=1
 
         replicaCount: 1
         image:
