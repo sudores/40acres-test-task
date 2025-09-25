@@ -37,8 +37,14 @@ spec:
       serviceAccountName: {{ include "bitcoin.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      {{- if .Values.extraInitContainers }}
       initContainers:
+        - name: fix-permissions
+          image: busybox
+          command: ["sh", "-c", "mkdir -p /data/.bitcoin && chown -R 1000:1000 /data/.bitcoin"]
+          volumeMounts:
+            - name: data
+              mountPath: /data/.bitcoin
+      {{- if .Values.extraInitContainers }}
       {{- toYaml .Values.extraInitContainers | nindent 8 }}
       {{- end }}
       containers:
@@ -96,6 +102,7 @@ spec:
           ports:
           - name: metrics
             containerPort: {{ .Values.service.ports.metrics }}
+            
 
       volumes:
         - name: config
