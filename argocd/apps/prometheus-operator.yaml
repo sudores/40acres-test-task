@@ -31,7 +31,7 @@ spec:
                   accessModes: ["ReadWriteOnce"]
                   resources:
                     requests:
-                      storage: 512MiB
+                      storage: 1Gi
           ingress:
             enabled: false
         grafana:
