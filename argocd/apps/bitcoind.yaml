@@ -4,7 +4,7 @@ metadata:
   name: bitcoin-node
   namespace: argocd
 spec:
-  project: harness
+  project: default
   source:
     repoURL: https://cosmicrocks.github.io/helm-charts/
     chart: bitcoin
