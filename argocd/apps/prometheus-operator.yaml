@@ -22,10 +22,10 @@ spec:
                     requests:
                       storage: 1Gi
             serviceMonitorSelectorNilUsesHelmValues: false
-            podMonitorSelector: {}
-            podMonitorNamespaceSelector: {}
-            serviceMonitorSelector: {}
-            serviceMonitorNamespaceSelector: {}
+            podMonitorNamespaceSelector:
+              any: true
+            serviceMonitorNamespaceSelector:
+              any: true
         alertmanager:
           alertmanagerSpec:
             storage:
