@@ -1,7 +1,3 @@
-Here’s a polished, step-by-step README based on your notes:
-
----
-
 # Minikube + Terraform + ArgoCD Setup
 
 This repository provides a simple setup to run a local Kubernetes cluster with Minikube, deploy ArgoCD via Terraform, and bootstrap applications including Bitcoin and Prometheus. The goal is simplicity and reproducibility.
