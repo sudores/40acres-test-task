@@ -23,9 +23,9 @@ spec:
                       storage: 1Gi
             serviceMonitorSelectorNilUsesHelmValues: false
             podMonitorNamespaceSelector:
-              any: true
+              matchLabels: []
             serviceMonitorNamespaceSelector:
-              any: true
+              matchLabels: []
         alertmanager:
           alertmanagerSpec:
             storage:
